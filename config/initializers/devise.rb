@@ -309,7 +309,8 @@ Devise.setup do |config|
   # config.sign_in_after_change_password = true
 
   config.jwt do |jwt|
-    jwt.secret = Rails.application.credentials.devise_jwt_secret
+    jwt.secret = Rails.application.credentials.devise_jwt_secret!
+    jwt.decoding_secret = Rails.application.credentials.devise_jwt_secret!
     jwt.expiration_time = 31557600
     jwt.dispatch_requests = [
       ['POST', %r{^/api/mobile/v1/users$}],

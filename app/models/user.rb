@@ -9,4 +9,6 @@ class User < ApplicationRecord
     :jwt_authenticatable,
     jwt_revocation_strategy: self,
   )
+
+  validates :name, presence: true
 end
