@@ -11,4 +11,7 @@ class User < ApplicationRecord
   )
 
   validates :name, presence: true
+
+  has_many :kids
+  belongs_to :current_kid, class_name: 'Kid', optional: true
 end

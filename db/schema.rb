@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_18_011454) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_21_010532) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -26,6 +26,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_18_011454) do
     t.index ["user_id"], name: "index_allowlisted_jwts_on_user_id"
   end
 
+  create_table "kids", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "date_of_birth", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_kids_on_user_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -34,9 +43,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_18_011454) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.string "name"
+    t.uuid "current_kid_id"
+    t.index ["current_kid_id"], name: "index_users_on_current_kid_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "allowlisted_jwts", "users", on_delete: :cascade
+  add_foreign_key "kids", "users", on_delete: :cascade
+  add_foreign_key "users", "kids", column: "current_kid_id", on_delete: :nullify
 end

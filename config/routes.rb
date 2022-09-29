@@ -9,6 +9,8 @@ Rails.application.routes.draw do
           resource :sessions, only: [:create, :destroy], controller: 'sessions'
         end
         resource :current_user, only: :show, controller: 'current_user'
+        resource :current_kid, only: :update, controller: 'current_kid'
+        resources :kids, only: [:create, :update, :destroy]
       end
     end
   end
