@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_21_010532) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_01_003827) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -24,6 +24,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_010532) do
     t.uuid "user_id", null: false
     t.index ["jti"], name: "index_allowlisted_jwts_on_jti", unique: true
     t.index ["user_id"], name: "index_allowlisted_jwts_on_user_id"
+  end
+
+  create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "kid_id", null: false
+    t.string "type", null: false
+    t.datetime "started_at", null: false
+    t.datetime "ended_at"
+    t.jsonb "fields", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["kid_id"], name: "index_events_on_kid_id"
   end
 
   create_table "kids", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -50,6 +61,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_010532) do
   end
 
   add_foreign_key "allowlisted_jwts", "users", on_delete: :cascade
+  add_foreign_key "events", "kids"
   add_foreign_key "kids", "users", on_delete: :cascade
   add_foreign_key "users", "kids", column: "current_kid_id", on_delete: :nullify
 end

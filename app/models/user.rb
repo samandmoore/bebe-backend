@@ -14,4 +14,5 @@ class User < ApplicationRecord
 
   has_many :kids
   belongs_to :current_kid, class_name: 'Kid', optional: true
+  has_many :events, through: :kids
 end
