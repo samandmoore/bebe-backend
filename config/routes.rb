@@ -14,7 +14,7 @@ Rails.application.routes.draw do
           resources :diaper_events, only: [:create, :update], controller: 'kids/diaper_events'
           resources :events, only: :index, controller: 'kids/events'
         end
-        resources :events, only: :delete
+        resources :events, only: :destroy
       end
     end
   end
